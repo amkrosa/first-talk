@@ -1,0 +1,55 @@
+@import '../styles/variables.css';
+
+.lobby-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.users-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.user-item {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    background-color: var(--background-color);
+    cursor: pointer;
+}
+
+.user-item:hover {
+    background-color: var(--hover-color);
+}
+
+.interests {
+    display: flex;
+    gap: 0.25rem;
+    margin-left: 1rem;
+}
+
+.interest {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+}
+
+.kick-btn {
+    margin-left: auto;
+    margin-right: 1rem;
+    background-color: var(--danger-color);
+    border: none;
+    border-radius: 4px;
+    color: var(--background-color);
+    cursor: pointer;
+}
+
+.split-btn {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: 4px;
+    color: var(--background-color);
+    cursor: pointer;
+}

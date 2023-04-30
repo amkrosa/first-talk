@@ -1,0 +1,18 @@
+spring:
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+  datasource:
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+    driverClassName: org.postgresql.Driver
+
+jwt:
+  secretKey: ${JWT_SECRET:your_secret_key_your_secret_key_your_secret_key}
+  validityInMillis: 3600000
+#springdoc:
+#  swagger-ui:
+#    path: /swagger-ui.html

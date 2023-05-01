@@ -1,4 +1,6 @@
 package io.amkrosa.backend.api.user;
 
-public record JwtDto(String jwt, String expiration) {
+import jakarta.validation.constraints.NotNull;
+
+public record JwtDto(@NotNull String jwt, @NotNull String expiration) {
 }

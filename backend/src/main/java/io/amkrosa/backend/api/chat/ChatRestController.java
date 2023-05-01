@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController("/api/chat")
@@ -26,7 +27,7 @@ public class ChatRestController {
                     content = @Content)})
     @PostMapping("/rooms")
     @ResponseStatus(HttpStatus.CREATED)
-    CreateRoomResponse createRoom(@RequestBody CreateRoomRequest createRoomRequest) {
+    CreateRoomResponse createRoom(@RequestBody @Validated CreateRoomRequest createRoomRequest) {
         var roomId = chatService.createRoom(createRoomRequest.toCreateRoom());
         return new CreateRoomResponse(roomId.toString());
     }
@@ -40,9 +41,9 @@ public class ChatRestController {
                     content = @Content)})
     @PutMapping("/rooms/{roomId}")
     @ResponseStatus(HttpStatus.OK)
-    void joinRoom(@RequestBody JoinRoomRequest joinRoomRequest, @PathVariable String roomId) {
+    void joinRoom(@RequestBody @Validated JoinRoomRequest joinRoomRequest, @PathVariable String roomId) {
         var user = chatService.joinRoom(joinRoomRequest.toJoinRoom(roomId));
-        template.convertAndSend(String.format("/topic/chat/rooms/%s", roomId), MessageWS.UserMessage.fromUser(user));
+        template.convertAndSend(String.format("/topic/chat/rooms/%s", roomId), MessageWS.UserJoinedMessage.of(user));
     }
 
     @Operation(summary = "Get all available rooms")

@@ -13,6 +13,7 @@ import java.security.Key;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 
 @Service
@@ -49,12 +50,29 @@ public class JwtProvider {
                 && isTokenNotExpired(token);
     }
 
+    public UserAuth getUserAuthFromToken(String token) {
+        var claims = getAllClaimsFromToken(token);
+        return new UserAuth(UUID.fromString(claims.get("id", String.class)),
+                claims.get("username", String.class),
+                claims.get("email", String.class),
+                claims.get("password", String.class),
+                claims.get("role", String.class));
+    }
+
     public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
     }
 
     public String getPasswordFromToken(String token) {
         return getClaimFromToken(token, (claims) -> claims.get("password", String.class));
+    }
+
+    public String getUserIdFromToken(String token) {
+        return getClaimFromToken(token, (claims) -> claims.get("id", String.class));
+    }
+
+    public String getEmailFromToken(String token) {
+        return getClaimFromToken(token, (claims) -> claims.get("email", String.class));
     }
 
     public String getRoleFromToken(String token) {
@@ -66,7 +84,7 @@ public class JwtProvider {
     }
 
     private <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = getAllClaimsFromToken(token);
+        var claims = getAllClaimsFromToken(token);
         return claimsResolver.apply(claims);
     }
 

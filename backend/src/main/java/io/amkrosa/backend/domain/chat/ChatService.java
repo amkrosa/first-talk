@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -49,6 +50,14 @@ public class ChatService {
             return user;
         }
         throw new UnsupportedOperationException(String.format("User cannot join room [roomId=%s, userId=%s]", joinRoom.roomId(), joinRoom.userId()));
+    }
+
+    public Room getRoom(UUID roomId) {
+        return roomRepository.findById(roomId).orElseThrow(() -> new UnsupportedOperationException("room not found"));
+    }
+
+    public Room getRoomWithUsers(UUID roomId) {
+        return roomRepository.findByIdWithUsers(roomId).orElseThrow(() -> new UnsupportedOperationException("room not found"));
     }
 
     private boolean canJoinRoom(JoinRoom joinRoom) {

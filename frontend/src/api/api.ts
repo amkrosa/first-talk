@@ -53,7 +53,7 @@ export interface CreateRoomResponse {
      * @type {string}
      * @memberof CreateRoomResponse
      */
-    'roomId'?: string;
+    'roomId': string;
 }
 /**
  * 
@@ -66,7 +66,7 @@ export interface GetRoomsResponse {
      * @type {Array<RoomDto>}
      * @memberof GetRoomsResponse
      */
-    'rooms'?: Array<RoomDto>;
+    'rooms': Array<RoomDto>;
 }
 /**
  * 
@@ -92,13 +92,13 @@ export interface JwtDto {
      * @type {string}
      * @memberof JwtDto
      */
-    'jwt'?: string;
+    'jwt': string;
     /**
      * 
      * @type {string}
      * @memberof JwtDto
      */
-    'expiration'?: string;
+    'expiration': string;
 }
 /**
  * 
@@ -154,19 +154,25 @@ export interface RoomDto {
      * @type {string}
      * @memberof RoomDto
      */
-    'name'?: string;
+    'name': string;
     /**
      * 
      * @type {string}
      * @memberof RoomDto
      */
-    'roomId'?: string;
+    'roomId': string;
     /**
      * 
      * @type {number}
      * @memberof RoomDto
      */
-    'userCount'?: number;
+    'userCount': number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof RoomDto
+     */
+    'inProgress': boolean;
 }
 /**
  * 
@@ -216,13 +222,13 @@ export interface UserResponse {
      * @type {string}
      * @memberof UserResponse
      */
-    'id'?: string;
+    'id': string;
     /**
      * 
      * @type {string}
      * @memberof UserResponse
      */
-    'name'?: string;
+    'name': string;
     /**
      * 
      * @type {Array<string>}
@@ -234,7 +240,7 @@ export interface UserResponse {
      * @type {JwtDto}
      * @memberof UserResponse
      */
-    'auth'?: JwtDto;
+    'auth': JwtDto;
 }
 
 /**

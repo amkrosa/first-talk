@@ -1,5 +1,7 @@
 package io.amkrosa.backend.configuration;
 
+import io.amkrosa.backend.domain.auth.UserProvider;
+import io.amkrosa.backend.domain.user.User;
 import io.amkrosa.backend.domain.user.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,6 +31,7 @@ import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @Configuration
@@ -36,7 +39,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
-    private final UserRepository userRepository;
+    private final UserProvider userProvider;
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
@@ -49,7 +52,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
                 .setAllowedOrigins("http://localhost:3000")
-                .setHandshakeHandler(new CustomHandshakeHandler(userRepository))
+                .setHandshakeHandler(new CustomHandshakeHandler(userProvider))
                 .withSockJS();
     }
 
@@ -87,8 +90,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @RequiredArgsConstructor
     @Slf4j
     static class CustomHandshakeHandler extends DefaultHandshakeHandler {
-        private final UserRepository userRepository;
-        private static final String USER_ID_KEY = "userId";
+        private final UserProvider userProvider;
 
         @Override
         protected Principal determineUser(
@@ -97,21 +99,15 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 Map<String, Object> attributes
         ) {
             String token = request.getURI().getQuery().replace("token=", "");
-            log.warn("token: {}", token);
+            Optional<User> user = userProvider.retrieveUserFromToken(token);
 
-//            if (!headers.containsKey(USER_ID_KEY)) {
-//                log.warn("Key {} was not found in the headers.", USER_ID_KEY);
-//                attributes.put("authorized", "false");
-//                return null;
-//            }
-//            var user = userRepository.findById(UUID.fromString(headers.get(USER_ID_KEY).get(0))).orElse(null);
-//
-//            if (user == null) {
-//                attributes.put("authorized", "false");
-//                return null;
-//            }
+            if (user.isEmpty()) {
+                log.warn("Could not verify user during handshake.");
+                attributes.put("authorized", "false");
+                return null;
+            }
 
-            return null;
+            return StompPrincipal.of(user.get().getId().toString());
         }
     }
 

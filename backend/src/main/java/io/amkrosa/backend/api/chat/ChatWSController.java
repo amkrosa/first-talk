@@ -1,5 +1,6 @@
 package io.amkrosa.backend.api.chat;
 
+import io.amkrosa.backend.domain.chat.ChatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -8,21 +9,19 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.socket.messaging.SessionConnectEvent;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Controller
 @RequiredArgsConstructor
 @Slf4j
 public class ChatWSController {
     private final SimpMessagingTemplate template;
+    private final ChatService chatService;
 
     @EventListener
     public void onWebSocketConnect(SessionConnectEvent event) {
@@ -84,14 +83,18 @@ public class ChatWSController {
 ////        template.convertAndSend("/topic/lobby", lobby.stream().map(User::username).toList());
 ////    }
 //
-//    @MessageMapping("/chat/rooms/{roomId}")
-//    @SendTo("/topic/room/{roomId}")
-//    public void joinRoom(@DestinationVariable String roomId, @Payload MessageWS<> message) {
-//        var principalName = Optional.ofNullable(sha.getUser()).orElseThrow(RuntimeException::new).getName();
-//        log.info("User added: {}, with principal: {}", user, principalName);
-//        lobby.add(new User(principalName, user.username(), user.isAdmin()));
-//        template.convertAndSend("/topic/lobby", lobby.stream().map(User::username).toList());
-//    }
+    @MessageMapping("/chat/rooms/{roomId}")
+    @SendTo("/topic/chat/rooms/{roomId}")
+    public MessageWS.RoomUserUpdateMessage joinRoom(@DestinationVariable String roomId, @Payload MessageWS.UserJoinedMessage message) {
+        var users = chatService.getRoomWithUsers(UUID.fromString(roomId)).getUsers();
+        return MessageWS.RoomUserUpdateMessage.of(users);
+    }
+
+    @MessageMapping("/chat/rooms/{roomId}/messages")
+    @SendTo("/topic/chat/rooms/{roomId}/messages")
+    public MessageWS.UserSentMessage messages(@DestinationVariable String roomId, @Payload MessageWS.UserSentMessage message) {
+        return message;
+    }
 
 //    //WEBRTC
 //    @MessageMapping("/signal/join")

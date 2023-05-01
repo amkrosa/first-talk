@@ -1,4 +1,6 @@
 package io.amkrosa.backend.api.chat;
 
-public record CreateRoomResponse(String roomId) {
+import jakarta.validation.constraints.NotNull;
+
+public record CreateRoomResponse(@NotNull String roomId) {
 }

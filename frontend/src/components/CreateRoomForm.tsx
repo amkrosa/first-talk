@@ -32,7 +32,7 @@ const CreateRoom: React.FC = () => {
                     dispatch(setRooms([...rooms, {
                         id: roomId,
                         name: name,
-                        userCount: 1,
+                        userCount: 0,
                         maxUserCount: parseInt(maxUsers),
                         inProgress: false
                     }]))

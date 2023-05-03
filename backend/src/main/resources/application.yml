@@ -1,4 +1,6 @@
 spring:
+  cache:
+    type: redis
   jpa:
     database: POSTGRESQL
     show-sql: true
@@ -9,11 +11,15 @@ spring:
     username: ${DATABASE_USERNAME}
     password: ${DATABASE_PASSWORD}
     driverClassName: org.postgresql.Driver
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIST_PORT:6379}
 
 jwt:
   secretKey: ${JWT_SECRET:your_secret_key_your_secret_key_your_secret_key}
   validityInMillis: 3600000
-#springdoc:
+
 #  swagger-ui:
 #    path: /swagger-ui.html
 logging:

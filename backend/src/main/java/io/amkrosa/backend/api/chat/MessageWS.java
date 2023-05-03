@@ -1,5 +1,6 @@
 package io.amkrosa.backend.api.chat;
 
+import io.amkrosa.backend.domain.chat.BreakoutRoom;
 import io.amkrosa.backend.domain.user.User;
 
 import java.util.Collection;
@@ -18,7 +19,8 @@ public class MessageWS {
         }
     }
 
-    record UserDto(String username, String userId){
+    //FIXME ?? changed from userId to id, remember
+    record UserDto(String username, String id){
         static UserDto of(User user) {
             return new UserDto(user.getName(), user.getId().toString());
         }
@@ -28,5 +30,20 @@ public class MessageWS {
         static UserSentMessage of(User user, String message) {
             return new UserSentMessage(UserDto.of(user), message);
         }
+    }
+
+    record CommandReceived(String command) {}
+
+    record BreakoutRoomCreated(String id, List<UserDto> users) {
+        static BreakoutRoomCreated of(BreakoutRoom breakoutRoom) {
+            var users = breakoutRoom.getUsers().stream()
+                    .map(UserDto::of)
+                    .toList();
+            return new BreakoutRoomCreated(breakoutRoom.getId().toString(), users);
+        }
+    }
+
+    enum CommandType {
+        CREATE_BREAKOUT_ROOMS
     }
 }

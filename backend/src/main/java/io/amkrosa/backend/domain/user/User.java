@@ -3,10 +3,10 @@ package io.amkrosa.backend.domain.user;
 import io.amkrosa.backend.domain.chat.BreakoutRoom;
 import io.amkrosa.backend.domain.chat.Room;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.data.util.Pair;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -41,5 +41,16 @@ public class User {
 
     public enum Role {
         ADMIN, GUEST, REGISTERED
+    }
+
+    @AllArgsConstructor(staticName = "of")
+    @Getter
+    public static class Pair {
+        private User user1;
+        private User user2;
+
+        public Set<User> getUsers() {
+            return Set.of(user1, user2);
+        }
     }
 }

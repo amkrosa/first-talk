@@ -6,8 +6,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Data
 @Entity
@@ -29,6 +31,9 @@ public class Room {
 
     @Column(nullable = false)
     private Integer userCount;
+
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ChatMessage> chatMessages;
 
     @ManyToOne
     @JoinColumn(name = "moderator_id", nullable = false)
@@ -52,6 +57,15 @@ public class Room {
     public void addUserToRoom(User user) {
         users.add(user);
         userCount+=1;
+    }
+
+    public Set<User.Pair> splitUsersToPairs() {
+        var userList = new ArrayList<>(users);
+
+        return IntStream.range(0, users.size())
+                .filter(i -> i % 2 == 0)
+                .mapToObj(i -> User.Pair.of(userList.get(i), userList.get(i+1)))
+                .collect(Collectors.toSet());
     }
 
     //TODO is this necessary?

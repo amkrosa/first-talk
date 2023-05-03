@@ -6,8 +6,9 @@ import {WebSocketProvider} from "./utils/WebSocketProvider";
 import {useAppSelector} from "./store/hooks";
 import {selectWebsocket} from "./store/websocket/reducer";
 import {selectUser} from "./store/user/reducer";
-import Room from "./components/Room";
-import {ROOM_PATH} from "./utils/router";
+import MainRoom from "./components/MainRoom";
+import {BREAKOUT_ROOM_PATH, ROOM_PATH} from "./utils/router";
+import BreakoutRoom from "./components/BreakoutRoom";
 
 const App: React.FC = () => {
     const {shouldConnect} = useAppSelector(selectWebsocket);
@@ -22,7 +23,8 @@ const App: React.FC = () => {
                     <div className="content">
                         <Routes>
                             <Route path="/" element={<WebSocketApp/>}/>
-                            <Route path={ROOM_PATH} element={<Room/>}/>
+                            <Route path={ROOM_PATH} element={<MainRoom/>}/>
+                            <Route path={BREAKOUT_ROOM_PATH} element={<BreakoutRoom/>}/>
                         </Routes>
                     </div>
                 </BrowserRouter>

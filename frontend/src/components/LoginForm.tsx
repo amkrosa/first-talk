@@ -29,22 +29,21 @@ const LoginForm: React.FC = () => {
             userApi.registerGuestUser(registerRequest)
                 .then(response => {
                     const data = response.data;
-                    if (data.name && data.id) {
-                        const user: User = {
-                            id: data.id,
-                            username: data.name,
-                        };
-                        dispatch(setUser(user));
-                    }
+                    const user: User = {
+                        id: data.id,
+                        username: data.name,
+                    };
+                    dispatch(setUser(user));
 
-                    if (data.auth && data.auth.jwt && data.auth.expiration) {
-                        const token: Token = {
-                            token: data.auth.jwt,
-                            expirationDate: data.auth.expiration
-                        }
-                        dispatch(setToken(token));
-                        dispatch(setLoggedIn(true));
+                    const token: Token = {
+                        token: data.auth.jwt,
+                        expirationDate: data.auth.expiration
                     }
+                    dispatch(setToken(token));
+                    dispatch(setLoggedIn(true));
+                    localStorage.setItem("token", token.token)
+                    localStorage.setItem("tokenExpiration", token.expirationDate)
+
                     return response;
                 })
                 .catch(console.error)

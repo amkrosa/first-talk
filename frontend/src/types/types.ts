@@ -34,3 +34,17 @@ export interface ChatMessage {
     username: string,
     message: string,
 }
+/*
+    record BreakoutRoomCreated(String id, List<UserDto> users) {
+        static BreakoutRoomCreated of(BreakoutRoom breakoutRoom) {
+            var users = breakoutRoom.getUsers().stream()
+                    .map(UserDto::of)
+                    .toList();
+            return new BreakoutRoomCreated(breakoutRoom.getId().toString(), users);
+        }
+    }
+ */
+export interface BreakoutRoomCreated {
+    id: string,
+    users: User[]
+}

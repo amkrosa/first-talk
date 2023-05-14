@@ -6,7 +6,7 @@ import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 
-public record GetRoomsResponse(@Validated @NotNull List<RoomDto> rooms) {
+record GetRoomsResponse(@Validated @NotNull List<RoomDto> rooms) {
     static GetRoomsResponse from(List<Room> rooms) {
         return new GetRoomsResponse(rooms.stream().map(RoomDto::from).toList());
     }

@@ -3,7 +3,7 @@ package io.amkrosa.backend.api.chat;
 import io.amkrosa.backend.domain.chat.Room;
 import jakarta.validation.constraints.NotNull;
 
-public record RoomDto(
+record RoomDto(
         @NotNull
         String name,
         @NotNull

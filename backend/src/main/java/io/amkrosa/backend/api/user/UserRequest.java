@@ -4,7 +4,7 @@ import io.amkrosa.backend.domain.user.User;
 
 import java.util.List;
 
-public record UserRequest(
+record UserRequest(
         String name,
         String type,
         String password,

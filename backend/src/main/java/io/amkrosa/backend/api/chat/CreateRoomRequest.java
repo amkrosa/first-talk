@@ -4,7 +4,7 @@ import io.amkrosa.backend.domain.chat.CreateRoom;
 
 import java.util.UUID;
 
-public record CreateRoomRequest(
+record CreateRoomRequest(
     String userId,
     String name
 ) {

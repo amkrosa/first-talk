@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController("/api/users")
 @RequiredArgsConstructor
-public class UserRestController {
+class UserRestController {
     private final UserService userService;
     private final JwtProvider jwtProvider;
 

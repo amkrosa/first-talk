@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController("/api/chat")
 @RequiredArgsConstructor
-public class ChatRestController {
+class ChatRestController {
     private final ChatService chatService;
     private final SimpMessagingTemplate template;
 

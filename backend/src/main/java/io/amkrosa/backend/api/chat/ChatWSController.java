@@ -21,7 +21,7 @@ import java.util.UUID;
 @Controller
 @RequiredArgsConstructor
 @Slf4j
-public class ChatWSController {
+class ChatWSController {
     private final SimpMessagingTemplate template;
     private final ChatService chatService;
     private final BreakoutRoomsService breakoutRoomsService;

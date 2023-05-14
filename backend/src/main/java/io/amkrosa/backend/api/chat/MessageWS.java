@@ -6,7 +6,7 @@ import io.amkrosa.backend.domain.user.User;
 import java.util.Collection;
 import java.util.List;
 
-public class MessageWS {
+class MessageWS {
     record UserJoinedMessage(String action, String username, String userId){
         static UserJoinedMessage of(User user) {
             return new UserJoinedMessage("JOIN", user.getName(), user.getId().toString());

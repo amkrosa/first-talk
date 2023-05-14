@@ -1,5 +1,6 @@
 package io.amkrosa.backend.domain.user;
 
+import io.amkrosa.backend.domain.auth.UserSession;
 import io.amkrosa.backend.domain.chat.BreakoutRoom;
 import io.amkrosa.backend.domain.chat.Room;
 import jakarta.persistence.*;

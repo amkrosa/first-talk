@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class RegisteredRegistrationStrategy implements RegistrationStrategy{
-    private final UserRepository userRepository;
+    private final UserPort userPort;
 
     @Override
     public User register(User user) {

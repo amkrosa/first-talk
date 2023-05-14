@@ -1,5 +1,6 @@
-package io.amkrosa.backend.domain.chat;
+package io.amkrosa.backend.infrastructure.database.chat;
 
+import io.amkrosa.backend.domain.chat.Room;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -7,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface RoomRepository extends JpaRepository<Room, UUID> {
+interface RoomRepository extends JpaRepository<Room, UUID> {
     Optional<Room> findByName(String name);
     Room getRoomById(UUID id);
     boolean existsRoomById(UUID id);

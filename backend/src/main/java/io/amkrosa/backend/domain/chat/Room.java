@@ -40,7 +40,7 @@ public class Room {
     private User moderator;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "room_id")
+    @JoinColumn(name = "current_room_id")
     private Set<User> users;
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)

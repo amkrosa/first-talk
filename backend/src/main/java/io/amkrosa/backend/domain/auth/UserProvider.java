@@ -1,8 +1,7 @@
 package io.amkrosa.backend.domain.auth;
 
 import io.amkrosa.backend.domain.user.User;
-import io.amkrosa.backend.domain.user.UserException;
-import io.amkrosa.backend.domain.user.UserRepository;
+import io.amkrosa.backend.domain.user.UserPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,14 +12,14 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class UserProvider {
-    private final UserRepository userRepository;
+    private final UserPort userPort;
     private final JwtProvider jwtProvider;
 
     public Optional<User> retrieveUserFromToken(String token) {
         log.debug("Retrieving user from token...");
         var userAuth = jwtProvider.getUserAuthFromToken(token);
         log.debug("Retrieved user from token [username={}]", userAuth.username());
-        var user = userRepository.findById(userAuth.userId());
+        var user = userPort.findUser(userAuth.userId());
         if (user.isPresent()) {
             log.debug("Found user in the database [username={}]", user.get().getName());
         } else {

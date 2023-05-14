@@ -25,7 +25,7 @@ public class BreakoutRoom {
     private Room room;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "breakout_room_id")
+    @JoinColumn(name = "current_breakout_room_id")
     private Set<User> users;
 
     @Column(nullable = true)

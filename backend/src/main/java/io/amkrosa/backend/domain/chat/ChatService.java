@@ -1,14 +1,12 @@
 package io.amkrosa.backend.domain.chat;
 
 import io.amkrosa.backend.domain.user.User;
-import io.amkrosa.backend.domain.user.UserRepository;
+import io.amkrosa.backend.domain.user.UserPort;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,18 +14,18 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 public class ChatService {
-    private final RoomRepository roomRepository;
-    private final UserRepository userRepository;
+    private final RoomPort roomPort;
+    private final UserPort userPort;
 
     @Transactional
     public UUID createRoom(CreateRoom createRoom) {
-        if (roomRepository.notExistsRoomByName(createRoom.roomName())) {
+        if (roomPort.hasNotRoom(createRoom.roomName())) {
             log.debug("Looking for user designed as moderator of room [userId={}, roomName={}]", createRoom.userId(), createRoom.roomName());
-            var roomModerator = userRepository.findById(createRoom.userId())
+            var roomModerator = userPort.findUser(createRoom.userId())
                     .orElseThrow(() -> new UnsupportedOperationException(String.format("Could not find user by id [userId=%s]", createRoom.userId())));
             log.debug("Found user designed as moderator of room [userId={}, roomName={}, name={}]", createRoom.userId(), createRoom.roomName(), roomModerator.getName());
 
-            var room = roomRepository.save(createRoom.toRoom(roomModerator));
+            var room = roomPort.save(createRoom.toRoom(roomModerator));
             log.debug("Saved room to database [roomName={}, roomId={}]", room.getName(), room.getId());
             return room.getId();
         }
@@ -36,15 +34,15 @@ public class ChatService {
     }
 
     public List<Room> getRooms() {
-        return roomRepository.findAll();
+        return roomPort.findAll();
     }
 
     @Transactional
     public User joinRoom(JoinRoom joinRoom) {
         //TODO security measures - check if user has session token
         if (canJoinRoom(joinRoom)) {
-            var user = userRepository.getUserById(joinRoom.userId());
-            var room = roomRepository.getRoomById(joinRoom.roomId());
+            var user = userPort.getUser(joinRoom.userId());
+            var room = roomPort.getRoom(joinRoom.roomId());
             room.addUserToRoom(user);
             log.debug("User added to the room [userName={}, roomName={}, roomId={}, userId={}]", user.getName(), room.getName(), room.getId(), user.getId());
             return user;
@@ -53,17 +51,17 @@ public class ChatService {
     }
 
     public Room getRoom(UUID roomId) {
-        return roomRepository.findById(roomId).orElseThrow(() -> new UnsupportedOperationException("room not found"));
+        return roomPort.findRoom(roomId).orElseThrow(() -> new UnsupportedOperationException("room not found"));
     }
 
     public Room getRoomWithUsers(UUID roomId) {
-        return roomRepository.findByIdWithUsers(roomId).orElseThrow(() -> new UnsupportedOperationException("room not found"));
+        return roomPort.findRoomWithUsers(roomId).orElseThrow(() -> new UnsupportedOperationException("room not found"));
     }
 
     private boolean canJoinRoom(JoinRoom joinRoom) {
-        var room = roomRepository.findById(joinRoom.roomId());
+        var room = roomPort.findRoom(joinRoom.roomId());
         return room.isPresent()
                 && room.get().getUsers().stream().noneMatch(user -> user.getId().equals(joinRoom.userId()))
-                && userRepository.existsUserById(joinRoom.userId());
+                && userPort.existsUser(joinRoom.userId());
     }
 }

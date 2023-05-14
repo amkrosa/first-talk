@@ -8,13 +8,13 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Slf4j
 public class GuestRegistrationStrategy implements RegistrationStrategy {
-    private final UserRepository userRepository;
+    private final UserPort userPort;
 
     @Override
     public User register(User user) {
         if (validate(user)) {
             log.debug("Validation successful! [name={}, role={}]", user.getName(), user.getRole());
-            return userRepository.save(user);
+            return userPort.saveUser(user);
         }
         throw ValidationException.userRegistrationValidationFailed(user);
     }
@@ -22,7 +22,7 @@ public class GuestRegistrationStrategy implements RegistrationStrategy {
     @Override
     public boolean validate(User user) {
         log.debug("Validating user... [name={}, role={}]", user.getName(), user.getRole());
-        return userRepository.findByName(user.getName())
+        return userPort.findUser(user.getName())
                 .isEmpty();
     }
 

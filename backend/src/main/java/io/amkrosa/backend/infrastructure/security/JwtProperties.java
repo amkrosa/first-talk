@@ -1,4 +1,4 @@
-package io.amkrosa.backend.domain.auth;
+package io.amkrosa.backend.infrastructure.security;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

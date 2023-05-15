@@ -1,4 +1,4 @@
-package io.amkrosa.backend.domain.auth;
+package io.amkrosa.backend.infrastructure.security;
 
 import io.amkrosa.backend.domain.user.User;
 import org.apache.commons.lang3.StringUtils;

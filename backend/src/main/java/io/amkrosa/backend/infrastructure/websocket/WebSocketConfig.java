@@ -1,7 +1,6 @@
-package io.amkrosa.backend.configuration;
+package io.amkrosa.backend.infrastructure.websocket;
 
-import io.amkrosa.backend.domain.auth.UserProvider;
-import io.amkrosa.backend.domain.user.User;
+import io.amkrosa.backend.domain.user.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +19,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 
@@ -28,7 +28,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
-    private final UserProvider userProvider;
+    private final UserTokenPort userTokenPort;
+    private final UserService userService;
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
@@ -41,7 +42,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
                 .setAllowedOrigins("http://localhost:3000")
-                .setHandshakeHandler(new CustomHandshakeHandler(userProvider))
+                .setHandshakeHandler(new CustomHandshakeHandler(userTokenPort, userService))
                 .withSockJS();
     }
 
@@ -79,7 +80,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @RequiredArgsConstructor
     @Slf4j
     static class CustomHandshakeHandler extends DefaultHandshakeHandler {
-        private final UserProvider userProvider;
+        private final UserTokenPort userTokenPort;
+        private final UserService userService;
 
         @Override
         protected Principal determineUser(
@@ -88,7 +90,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 Map<String, Object> attributes
         ) {
             String token = request.getURI().getQuery().replace("token=", "");
-            Optional<User> user = userProvider.retrieveUserFromToken(token);
+            LocalDateTime tokenExpirationDate = userTokenPort.getExpirationDate(UserToken.fromToken(token));
+            Optional<User> user = userService.retrieveUserFromToken(new UserToken(token, tokenExpirationDate));
 
             if (user.isEmpty()) {
                 log.warn("Could not verify user during handshake.");

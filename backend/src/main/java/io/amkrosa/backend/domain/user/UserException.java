@@ -13,4 +13,14 @@ public class UserException extends RuntimeException {
             super(String.format("User has not been found [username=%s, userId=%s]", username, userId.toString()));
         }
     }
+
+    public static class UserTokenInvalid extends RuntimeException {
+        public UserTokenInvalid(String username) {
+            super(String.format("User has invalid token [username=%s]", username));
+        }
+
+        public UserTokenInvalid() {
+            super("User has invalid token");
+        }
+    }
 }

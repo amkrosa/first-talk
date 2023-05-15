@@ -1,11 +1,13 @@
-package io.amkrosa.backend.domain.user;
+package io.amkrosa.backend.domain.user.registration;
 
+import io.amkrosa.backend.domain.user.User;
+import io.amkrosa.backend.domain.user.UserPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class AdminRegistrationStrategy implements RegistrationStrategy{
+class RegisteredRegistrationStrategy implements RegistrationStrategy{
     private final UserPort userPort;
 
     @Override
@@ -20,6 +22,6 @@ public class AdminRegistrationStrategy implements RegistrationStrategy{
 
     @Override
     public User.Role getUserRole() {
-        return User.Role.ADMIN;
+        return User.Role.REGISTERED;
     }
 }

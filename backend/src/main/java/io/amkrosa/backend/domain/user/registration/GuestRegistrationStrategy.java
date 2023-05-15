@@ -1,5 +1,8 @@
-package io.amkrosa.backend.domain.user;
+package io.amkrosa.backend.domain.user.registration;
 
+import io.amkrosa.backend.domain.user.User;
+import io.amkrosa.backend.domain.user.UserPort;
+import io.amkrosa.backend.domain.user.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -7,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class GuestRegistrationStrategy implements RegistrationStrategy {
+class GuestRegistrationStrategy implements RegistrationStrategy {
     private final UserPort userPort;
 
     @Override
